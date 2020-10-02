@@ -95,12 +95,9 @@ module Zip
       elsif buffer && path_or_io.size > 0
         # This zip is probably a non-empty StringIO.
         read_from_stream(path_or_io)
-      elsif @create
+      elsif @create || ::File.zero?(@name)
         # This zip is completely new/empty and is to be created.
         @entry_set = EntrySet.new
-      elsif ::File.zero?(@name)
-        # A file exists, but it is empty.
-        raise Error, "File #{@name} has zero size. Did you mean to pass the create flag?"
       else
         # Everything is wrong.
         raise Error, "File #{@name} not found"
